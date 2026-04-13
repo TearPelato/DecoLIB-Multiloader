@@ -6,7 +6,9 @@
 
 # Gradle build folder
 build
-/repo
+/neoforge/repo
+/fabric/repo
+/common/repo
 # IntelliJ
 out/
 .idea
