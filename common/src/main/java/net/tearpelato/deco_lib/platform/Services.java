@@ -1,7 +1,7 @@
-package net.tier1234.deco_lib.platform;
+package net.tearpelato.deco_lib.platform;
 
-import net.tier1234.deco_lib.Constants;
-import net.tier1234.deco_lib.platform.services.IPlatformHelper;
+import net.tearpelato.deco_lib.Constants;
+import net.tearpelato.deco_lib.platform.services.IPlatformHelper;
 
 import java.util.ServiceLoader;
 

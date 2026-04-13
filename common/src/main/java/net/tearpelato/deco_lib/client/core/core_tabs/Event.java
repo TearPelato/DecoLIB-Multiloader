@@ -1,4 +1,4 @@
-package net.tier1234.deco_lib.client.core.core_tabs;
+package net.tearpelato.deco_lib.client.core.core_tabs;
 
 import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Method;

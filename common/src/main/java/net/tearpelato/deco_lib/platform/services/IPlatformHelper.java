@@ -1,4 +1,4 @@
-package net.tier1234.deco_lib.platform.services;
+package net.tearpelato.deco_lib.platform.services;
 
 public interface IPlatformHelper {
 

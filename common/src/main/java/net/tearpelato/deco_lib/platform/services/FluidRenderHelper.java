@@ -1,4 +1,4 @@
-package net.tearpelato.deco_lib.platform.fluid;
+package net.tearpelato.deco_lib.platform.services;
 
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.BlockPos;

@@ -78,7 +78,7 @@ jar {
 }
 
 processResources {
-    var expandProps = ['version'                      : version,
+    var expandProps = ['mod_version'                  : mod_version,
                        'group'                        : project.group, //Else we target the task's group.
                        'minecraft_version'            : minecraft_version,
                        'minecraft_version_range'      : minecraft_version_range,
@@ -91,8 +91,6 @@ processResources {
                        'description'                  : project.description,
                        'neoforge_version'             : neoforge_version,
                        'neoforge_loader_version_range': neoforge_loader_version_range,
-                       "forge_version"                : forge_version,
-                       "forge_loader_version_range"   : forge_loader_version_range,
                        'credits'                      : credits,
                        'java_version'                 : java_version]
 
@@ -105,13 +103,16 @@ processResources {
 publishing {
     publications {
         register('mavenJava', MavenPublication) {
-            artifactId base.archivesName.get()
             from components.java
+
+            artifactId = "${mod_id}-${minecraft_version}"
+            version = "${mod_version}"
         }
     }
     repositories {
         maven {
-            url System.getenv('local_maven_url')
+            url = uri("${project.projectDir}/repo")
         }
     }
 }
+

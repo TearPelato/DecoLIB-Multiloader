@@ -12,16 +12,15 @@
     "sources": "https://github.com/FabricMC/fabric-example-mod"
   },
   "license": "${license}",
-  "icon": "${mod_id}.png",
+  "icon": "deco_lib.png",
   "environment": "*",
   "entrypoints": {
     "main": [
-      "net.tier1234.deco_lib.DecoLIB"
+      "net.tearpelato.deco_lib.DecoLIB"
     ]
   },
   "mixins": [
-    "${mod_id}.mixins.json",
-    "${mod_id}.fabric.mixins.json"
+
   ],
   "depends": {
     "fabricloader": ">=${fabric_loader_version}",

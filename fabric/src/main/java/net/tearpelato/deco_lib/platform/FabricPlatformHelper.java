@@ -1,6 +1,6 @@
-package net.tier1234.deco_lib.platform;
+package net.tearpelato.deco_lib.platform;
 
-import net.tier1234.deco_lib.platform.services.IPlatformHelper;
+import net.tearpelato.deco_lib.platform.services.IPlatformHelper;
 import net.fabricmc.loader.api.FabricLoader;
 
 public class FabricPlatformHelper implements IPlatformHelper {
