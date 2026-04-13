@@ -104,8 +104,7 @@ publishing {
     publications {
         register('mavenJava', MavenPublication) {
             from components.java
-
-            artifactId = "${mod_id}-${minecraft_version}"
+            artifactId base.archivesName.get()
             version = "${mod_version}"
         }
     }
