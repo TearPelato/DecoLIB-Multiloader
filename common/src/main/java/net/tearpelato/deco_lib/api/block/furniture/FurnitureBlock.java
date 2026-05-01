@@ -35,4 +35,3 @@ public abstract class FurnitureBlock extends Block
         return false;
     }
 }
-

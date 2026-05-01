@@ -1,4 +1,4 @@
-package net.tearpelato.deco_lib.fluid.impl;
+package net.tearpelato.deco_lib.platform;
 
 import net.fabricmc.fabric.api.transfer.v1.context.ContainerItemContext;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
@@ -11,15 +11,20 @@ import net.minecraft.world.level.material.Fluids;
 import net.tearpelato.deco_lib.platform.services.FluidItemHelper;
 
 public class FabricFluidItemHelper implements FluidItemHelper {
+
     @Override
     public Fluid getFluidFromItemStack(ItemStack stack) {
+        if (stack.isEmpty()) return Fluids.EMPTY;
         Storage<FluidVariant> storage = FluidStorage.ITEM.find(stack, ContainerItemContext.withConstant(stack));
         if (storage == null) return Fluids.EMPTY;
         for (StorageView<FluidVariant> view : storage) {
-            if (!view.isResourceBlank() && view.getAmount() > 0) {
-                return view.getResource().getFluid();
+            if (view.isResourceBlank()) continue;
+            FluidVariant variant = view.getResource();
+            if (!variant.isBlank()) {
+                return variant.getFluid();
             }
         }
+
         return Fluids.EMPTY;
     }
 }

@@ -34,7 +34,7 @@ public class BasicContainerOpenersCounter extends ContainerOpenersCounter
     }
 
     @Override
-    public boolean isOwnContainer(Player player)
+    protected boolean isOwnContainer(Player player)
     {
         return this.blockEntity.isMatchingContainerMenu(player.containerMenu);
     }

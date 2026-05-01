@@ -8,6 +8,6 @@ public interface FluidItemHelper {
     Fluid getFluidFromItemStack(ItemStack stack);
 
     static FluidItemHelper get() {
-        return Services.load(FluidItemHelper.class);
+        return Services.FLUID_ITEM_HELPER;
     }
 }
