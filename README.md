@@ -27,6 +27,7 @@ implementation("net.tearpelato:deco_lib-1.21.1:${deco_lib_version}")
 
 so the deco_lib_vrsion parameter is about to be defined on the `gradle.properties` file
 like this:
-`deco_lib_version = 1.0.0`
+`deco_lib_version = 1.1.1`
 check always for the latest versione [here](https://maven.liukrast.net/net/tearpelato)
 # Usage Example
+For example you can create chstom furniture block.
