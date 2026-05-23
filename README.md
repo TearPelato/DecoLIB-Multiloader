@@ -30,4 +30,16 @@ like this:
 `deco_lib_version = 1.1.1`
 check always for the latest versione [here](https://maven.liukrast.net/net/tearpelato)
 # Usage Example
-For example you can create chstom furniture block.
+For example you can create custom furniture blocks:
+```
+ public class ExampleFurnitureBlock extends FurnitureHorizontalBlock {
+
+        public ExampleFurnitureBlock(Properties properties) {
+        super(properties);
+   }
+}
+
+```
+
+or also able to create entities, screens and blockentityrenderers(all thanks to MrCrayfish) on multiloader.
+
