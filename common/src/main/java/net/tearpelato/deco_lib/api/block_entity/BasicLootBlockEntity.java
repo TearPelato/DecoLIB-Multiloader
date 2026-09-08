@@ -8,6 +8,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.WorldlyContainer;
+import net.minecraft.world.entity.ContainerUser;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -18,6 +19,8 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.entity.ContainerOpenersCounter;
 import net.minecraft.world.level.block.entity.RandomizableContainerBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Iterator;
@@ -105,23 +108,23 @@ public abstract class BasicLootBlockEntity extends RandomizableContainerBlockEnt
     }
 
     @Override
-    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider provider)
+    protected void saveAdditional(ValueOutput output)
     {
-        super.saveAdditional(tag, provider);
-        if(!this.trySaveLootTable(tag))
+        super.saveAdditional(output);
+        if(!this.trySaveLootTable(output))
         {
-            ContainerHelper.saveAllItems(tag, this.items, provider);
+            ContainerHelper.saveAllItems(output, this.items);
         }
     }
 
     @Override
-    public void loadAdditional(CompoundTag tag, HolderLookup.Provider provider)
+    public void loadAdditional(ValueInput input)
     {
-        super.loadAdditional(tag, provider);
+        super.loadAdditional(input);
         this.items = NonNullList.withSize(this.getContainerSize(), ItemStack.EMPTY);
-        if(!this.tryLoadLootTable(tag))
+        if(!this.tryLoadLootTable(input))
         {
-            ContainerHelper.loadAllItems(tag, this.items, provider);
+            ContainerHelper.loadAllItems( input, this.items);
         }
     }
 
@@ -143,23 +146,6 @@ public abstract class BasicLootBlockEntity extends RandomizableContainerBlockEnt
         return true;
     }
 
-    @Override
-    public void startOpen(Player player)
-    {
-        if(!this.remove && !player.isSpectator())
-        {
-            this.openersCounter.incrementOpeners(player, this.getLevel(), this.getBlockPos(), this.getBlockState());
-        }
-    }
-
-    @Override
-    public void stopOpen(Player player)
-    {
-        if(!this.remove && !player.isSpectator())
-        {
-            this.openersCounter.decrementOpeners(player, this.getLevel(), this.getBlockPos(), this.getBlockState());
-        }
-    }
 
     public void updateOpenerCount()
     {
@@ -173,5 +159,3 @@ public abstract class BasicLootBlockEntity extends RandomizableContainerBlockEnt
 
     public void onClose(Level level, BlockPos pos, BlockState state) {}
 }
-
-

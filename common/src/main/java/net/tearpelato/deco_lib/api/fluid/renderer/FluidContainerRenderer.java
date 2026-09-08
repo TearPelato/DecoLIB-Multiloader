@@ -2,45 +2,43 @@ package net.tearpelato.deco_lib.api.fluid.renderer;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import net.minecraft.client.renderer.BiomeColors;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.block.BlockAndTintGetter;
+import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.world.level.Level;
+import net.minecraft.util.ARGB;
 import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.AABB;
 import net.tearpelato.deco_lib.api.fluid.block_entity.FluidContainerBlockEntity;
-import net.tearpelato.deco_lib.platform.services.FluidRenderHelper;
 import org.joml.Matrix4f;
 
 public class FluidContainerRenderer {
 
-    public static void drawContainer(Level level, BlockPos pos, FluidContainerBlockEntity be, AABB box, PoseStack ms, MultiBufferSource buf, int light) {
+    public static void drawContainer(FluidRenderState state, BlockAndTintGetter world, BlockPos pos, FluidContainerBlockEntity be, AABB box, PoseStack ms, MultiBufferSource buf) {
         Fluid fluid = be.getFluid();
-        if (be.isEmpty()) return;
+        if (fluid == Fluids.EMPTY) return;
 
-        FluidRenderHelper helper = FluidRenderHelper.get();
-
-        TextureAtlasSprite still = helper.getStillTexture(fluid);
-        int tint = helper.getTintColor(fluid, level, pos);
-
-        float a = ((tint >> 24) & 0xFF) / 255f;
-        if (a == 0f) a = 1f;
-        float r = ((tint >> 16) & 0xFF) / 255f;
-        float g = ((tint >> 8)  & 0xFF) / 255f;
-        float b = ( tint        & 0xFF) / 255f;
-
-        VertexConsumer vc = buf.getBuffer(helper.getRenderLayer(fluid));
-
-        float fullness = (float) be.getAmount() / be.getCapacity();
+        TextureAtlasSprite still = state.fluidSprites.still();
+        int color = state.waterTintAtPos;
+        if (fluid.isSame(Fluids.WATER)) color = BiomeColors.getAverageWaterColor(world, pos);
+        float r = ARGB.red(color) / 255f;
+        float g = ARGB.green(color) / 255f;
+        float b = ARGB.blue(color) / 255f;
+        float a = 1.0f;
+        float fullness = (float) be.getStoredAmount() / be.getCapacity();
         float y = (float) box.minY + (float)(box.maxY - box.minY) * fullness;
         y = Math.min((float) box.maxY, Math.max((float) box.minY, y));
+        float u0 = still.getU0() + (still.getU1() - still.getU0()) * (float) (box.minX - Math.floor(box.minX));
+        float u1 = still.getU0() + (still.getU1() - still.getU0()) * (float) (box.maxX - Math.floor(box.minX));
+        float v0 = still.getV0() + (still.getV1() - still.getV0()) * (float) (box.minZ - Math.floor(box.minZ));
+        float v1 = still.getV0() + (still.getV1() - still.getV0()) * (float) (box.maxZ - Math.floor(box.minZ));
 
-        float u0 = still.getU0() + (still.getU1() - still.getU0()) * (float)(box.minX - Math.floor(box.minX));
-        float u1 = still.getU0() + (still.getU1() - still.getU0()) * (float)(box.maxX - Math.floor(box.minX));
-        float v0 = still.getV0() + (still.getV1() - still.getV0()) * (float)(box.minZ - Math.floor(box.minZ));
-        float v1 = still.getV0() + (still.getV1() - still.getV0()) * (float)(box.maxZ - Math.floor(box.minZ));
-
+        int light = state.lightCoords;
+        VertexConsumer vc = buf.getBuffer(RenderTypes.translucentMovingBlock());
         Matrix4f mat = ms.last().pose();
         vc.addVertex(mat, (float) box.minX, y, (float) box.minZ).setColor(r,g,b,a).setUv(u0,v0).setLight(light).setNormal(0,1,0);
         vc.addVertex(mat, (float) box.minX, y, (float) box.maxZ).setColor(r,g,b,a).setUv(u0,v1).setLight(light).setNormal(0,1,0);
@@ -52,10 +50,10 @@ public class FluidContainerRenderer {
         minX /= 16.0; minY /= 16.0; minZ /= 16.0;
         maxX /= 16.0; maxY /= 17.0; maxZ /= 16.0;
         return switch (dir) {
-            case WEST  -> new AABB(1-maxX, minY, 1-maxZ, 1-minX, maxY, 1-minZ);
-            case NORTH -> new AABB(minZ,   minY, 1-maxX,  maxZ,  maxY, 1-minX);
-            case SOUTH -> new AABB(1-minZ, minY,  minX,  1-maxZ, maxY,  maxX);
-            default    -> new AABB(minX,   minY,  minZ,   maxX,  maxY,  maxZ);
+            case WEST -> new AABB(1-maxX,minY,1-maxZ,1-minX,maxY,1-minZ);
+            case NORTH -> new AABB(minZ,minY,1-maxX,maxZ,maxY,1-minX);
+            case SOUTH -> new AABB(1-minZ,minY,minX,1-maxZ,maxY,maxX);
+            default -> new AABB(minX,minY,minZ,maxX,maxY,maxZ);
         };
     }
 }
