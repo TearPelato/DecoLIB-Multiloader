@@ -6,6 +6,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.material.Fluid;
+import net.tearpelato.deco_lib.api.fluid.block_entity.FluidContainerBlockEntity;
 import net.tearpelato.deco_lib.api.fluid.renderer.core.FluidSprites;
 
 public class FluidRenderState extends BlockEntityRenderState {
@@ -14,7 +15,7 @@ public class FluidRenderState extends BlockEntityRenderState {
     public Level level;
     public BlockAndTintGetter world;
     public BlockPos pos;
-    //public KitchenSinkBlockEntity be;
+    public FluidContainerBlockEntity be;
     public FluidSprites fluidSprites;
     public int waterTintAtPos = 0xFFFFFF;
 }
