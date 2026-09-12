@@ -16,9 +16,6 @@ import java.util.List;
 
 public class BlockEntityUtil {
 
-    /**
-     * Invia l'update packet creato da BlockEntity#getUpdatePacket()
-     */
     public static void sendUpdate(BlockEntity blockEntity) {
         Packet<?> packet = blockEntity.getUpdatePacket();
         if (packet != null) {
@@ -26,9 +23,6 @@ public class BlockEntityUtil {
         }
     }
 
-    /**
-     * Invia un pacchetto con CompoundTag custom (aggiunge automaticamente id e pos).
-     */
     public static void sendUpdatePacket(BlockEntity blockEntity, CompoundTag tag) {
         writeIdAndPos(blockEntity, tag);
         ClientboundBlockEntityDataPacket packet =
