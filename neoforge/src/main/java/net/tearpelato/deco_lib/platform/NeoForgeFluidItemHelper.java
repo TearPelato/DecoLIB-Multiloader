@@ -3,8 +3,10 @@ package net.tearpelato.deco_lib.platform;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
-import net.neoforged.neoforge.fluids.FluidStack;
-import net.neoforged.neoforge.fluids.FluidUtil;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.transfer.ResourceHandler;
+import net.neoforged.neoforge.transfer.access.ItemAccess;
+import net.neoforged.neoforge.transfer.fluid.FluidResource;
 import net.tearpelato.deco_lib.platform.services.FluidItemHelper;
 
 public class NeoForgeFluidItemHelper implements FluidItemHelper {
@@ -13,11 +15,16 @@ public class NeoForgeFluidItemHelper implements FluidItemHelper {
     public Fluid getFluidFromItemStack(ItemStack stack) {
         if (stack.isEmpty()) return Fluids.EMPTY;
 
-        return FluidUtil.getFluidHandler(stack)
-                .map(handler -> {
-                    FluidStack fluidStack = handler.getFluidInTank(0);
-                    return fluidStack.isEmpty() ? Fluids.EMPTY : fluidStack.getFluid();
-                })
-                .orElse(Fluids.EMPTY);
+        ResourceHandler<FluidResource> handler = ItemAccess.forStack(stack).getCapability(Capabilities.Fluid.ITEM);
+
+        if (handler == null) return Fluids.EMPTY;
+
+        for (int i = 0; i < handler.size(); i++) {
+            FluidResource resource = handler.getResource(i);
+            if (!resource.isEmpty() && handler.getAmountAsLong(i) > 0) {
+                return resource.getFluid();
+            }
+        }
+        return Fluids.EMPTY;
     }
 }
